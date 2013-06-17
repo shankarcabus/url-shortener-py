@@ -1,0 +1,20 @@
+<div class="url-list">
+  <table>
+    <thead>
+      <tr>
+        <th class="th-original-url">Original URL</th>
+        <th class="th-short-url">Short URL</th>
+        <th class="th-date-url">Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for url in urls %}
+        <tr>
+          <td><a href="{{url.originalUrl}}">{{url|truncate(40)}}</a></td>
+          <td><a href="{{absoluteUrl}}{{shortUrl}}">{{absoluteUrl}}{{shortUrl}}</a></td>
+          <td>{{date}}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,214 @@
+@belizeHole: #3498db;
+@peterRiver: #2980b9;
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  color: #333;
+}
+
+html, body {
+  height: 100%;
+}
+
+a {
+  text-decoration: none;
+  color: @belizeHole;
+  &:hover {
+    text-decoration: underline;
+  }
+  &.no-style {
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}
+
+input, textarea {
+  outline: none;
+  border: 1px solid #ccc;
+}
+
+// Clearfix for clearing floats like a boss h5bp.com/q
+.clearfix() {
+  zoom: 1;
+  &:before,
+  &:after {
+    display: table;
+    content: "";
+    zoom: 1;
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+
+.top {
+  width: 100%;
+  height: 40px;
+  background-color: #f3f3f3;
+  border-bottom: 1px solid #ddd;
+  .clearfix();
+  .top-logo {
+    float: left;
+    display: block;
+    padding: 10px 10px 0 10px;
+    color: @belizeHole;
+    font-weight: bold;
+    font-size: 20px;
+    height: 30px;
+    &:hover {
+      background-color: #eee;
+    }
+  }
+  .top-login {
+    float: right;
+    margin: 10px 10px 0 0;
+    font-size: 12px;
+  }
+}
+
+.main-field {
+  margin: 50px auto 0 auto;
+  width: 560px;
+  .clearfix();
+  input {
+    padding: 8px;
+    width: 450px;
+    float: left;
+  }
+  .btn {
+    float: right;
+    background-color: @belizeHole;
+    color: #fff;
+    padding: 7px 10px;
+    &:hover {
+      background-color: @peterRiver;
+    }
+  }
+  &.invalid {
+    .field-error-msg {
+      visibility: visible;
+    }
+  }
+}
+
+.field-error-msg {
+  color: red;
+  visibility: hidden;
+}
+
+.short-url-box {
+  display: none;
+  width: 530px;
+  height: 40px;
+  margin: 15px auto 0 auto;
+  padding: 15px;
+  background-color: #eee;
+  position: relative;
+  font-weight: bold;
+  font-size: 22px;
+  text-align: center;
+  i {
+    position: absolute;
+    top: -25px;
+    font-size: 40px;
+    color: #eee;
+    left: ~"calc(50% - 10px)";
+  }
+  &.loading {
+    .short-url-loader {
+      display: block;
+    }
+  }
+  &.loaded {
+    display: block;
+    .short-url {
+      display: block;
+    }
+  }
+}
+
+.short-url-loader {
+  display: none;
+}
+
+.short-url {
+  width: 100%;
+  text-align: center;
+  resize: none;
+  background-color: transparent;
+  border: none;
+  height: 30px;
+  display: none;
+}
+
+.url-list {
+  width: 90%;
+  min-width: 700px;
+  max-width: 900px;
+  margin: 0 auto;
+  margin-top: 50px;
+  table {
+    text-align: left;
+    font-size: 12px;
+    width: 100%;
+    .th-original-url, .th-short-url {
+      width: 40%;
+    }
+    .th-date-url {
+      width: 20%;
+    }
+    thead {
+      background-color: @belizeHole;
+      color: #fff;
+      font-size: 13px;
+      th {
+        padding: 3px;
+      }
+    }
+    tbody {
+      tr {
+        border-bottom: 1px solid #eee;
+        &:hover {
+          background-color: #eee;
+        }
+      }
+      td {
+        padding: 5px 3px;
+      }
+    }
+  }
+}
+
+// Overwrite login-buttons component
+#login-buttons {
+  .accounts-dialog {
+    box-shadow: none;
+    border: 1px solid #ccc;
+    .login-close-text {
+      font-size: 12px;
+      text-decoration: none;
+      color: #777;
+    }
+  }
+  #login-dropdown-list {
+    right: 6px !important; // TOFIX
+    .login-button {
+      background: @belizeHole;
+      box-shadow: none;
+      text-shadow: none;
+      border: none;
+      border-radius: 0;
+    }
+    input {
+      border: 1px solid #ccc;
+      border-radius: 0;
+    }
+    label {
+      font-weight: normal;
+      color: #555;
+    }
+  }
+}
+
