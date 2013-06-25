@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, redirect, url_for, abort
+# -*- coding: utf-8 -*-
+
 from flask.ext.assets import Environment, Bundle
 from flask.ext.pymongo import PyMongo
 from flask.ext.login import LoginManager
@@ -12,6 +13,7 @@ import time
 #----------------------------------------
 
 app = Flask(__name__)
+# app.debug = True
 app.config.update(
     DEBUG = True
 )
@@ -19,23 +21,70 @@ app.config.update(
 mongo = PyMongo(app)
 env = Environment(app)
 
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+# filename = 'general'
+# # output = 'gen/%s.'%filename + '%(version)s.min.css'
+# output = 'gen/%s.min.css'%filename
+# bundle = Bundle('less/general.less', filters='less, yui_css', output=output)
+# env.register('%s_css'%filename, bundle)
+
+# js = Bundle('js/jquery.js', 'js/teste.js', output='gen/packed.js')
+# env.register('js_all', js)
+
+# css = Bundle('css/general.less','css/reset.less', filters='less', output='gen/packed.css')
+# env.register('css_all', css)
+
 #----------------------------------------
 # login
 #----------------------------------------
 
+# User class
+class DbUser(object):
+  """ Wraps User object for Flask-Login """
+
+  def __init__(self, user):
+    self._user = user
+
+  def get_id(self):
+    return unicode(self._user.id)
+
+  def is_active(self):
+    return self._user.enabled
+
+  def is_anonymous(self):
+    return False
+
+  def is_authenticated(self):
+    return True
+
 @login_manager.user_loader
 def load_user(userid):
-  return mongo.db.users.find({'id': userid}) or None
+  return mongo.db.users.find({'userid': userid}) or None
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-  form = LoginForm()
-  if form.validate_on_submit():
-    # login and validate the user...
-    login_user(user)
-    flas............h("Logged in successfully.")
-    return redirect(request.args.get("next") or url_for("index"))
-  return render_template("login.html", form=form)
+  if request.method == "POST" and "email" in request.form:
+    username = request.form["username"]
+
+    # check MongoDB for the existence of the entered username
+    user = mongo.db.users.find_one({'email': email})
+    userid = int(user['userid'])
+
+    # create User object/instance
+    db_user = DbUser(user, userid, active=True)
+
+    # if username entered matches database, log user in
+    if authenticate(app.config['AUTH_SERVER'], username, password):
+      # log user in,
+      login_user(db_user)
+      return url_for("index"))
+    else:
+      flash("Invalid username.")
+  else:
+    flash(u"Invalid login.")
+return render_template("login.html")
 
 #----------------------------------------
 # controllers
@@ -44,11 +93,13 @@ def login():
 @app.route('/')
 def index():
 
+  urls = [
+    {}
+  ]
   components = {
-    'list' : render_template('components/urls_list.html')
+    'list' : render_template('components/urls_list.html', urls=urls)
   }
 
-  # TOFIX: remove config from here
   params = {
     'config': config,
     'STATIC_URL': config.STATIC_URL,
@@ -68,19 +119,19 @@ def save():
 
   timestamp = int(time.time()*1000) # Converts float timestamp (1371431252.882313) to integer with 3 decimal places (1371431252882)
   code = encode_time(timestamp)
-
   doc = {
     'url': url,
     'code': code,
     'user': {}
   }
-
+  # Inserts a new doc
   mongo.db.urls.insert(doc)
 
   return url_for("redirect_url", code=code, _external=True)
 
 @app.route('/<string:code>')
 def redirect_url(code):
+  # Gets
   doc_url = mongo.db.urls.find_one({'code': code})
 
   if doc_url:
